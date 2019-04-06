@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>Users &laquo; Admin</title>
+  <link rel="stylesheet" href="/public/assets/vendors/bootstrap/css/bootstrap.css">
+  <link rel="stylesheet" href="/public/assets/vendors/font-awesome/css/font-awesome.css">
+  <link rel="stylesheet" href="/public/assets/vendors/nprogress/nprogress.css">
+  <link rel="stylesheet" href="/public/assets/css/admin.css">
+  <script src="/public/assets/vendors/nprogress/nprogress.js"></script>
+
+  {{block 'style'}}{{/block}}
+</head>
+<body>
+  <script>NProgress.start()</script>
+
+  <div class="main">
+    {{include './includes/nav.html'}}
+
+    {{block 'content'}}{{/block}}
+  </div>
+
+  {{include './includes/aside.html'}}
+
+  <script src="/public/assets/vendors/jquery/jquery.js"></script>
+  <script src="/public/assets/vendors/bootstrap/js/bootstrap.js"></script>
+  <script>NProgress.done()</script>
+  {{block 'script'}}{{/block}}
+</body>
+</html>
