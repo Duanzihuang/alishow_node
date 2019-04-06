@@ -1,0 +1,26 @@
+{
+  "name": "alishow_node",
+  "version": "1.0.0",
+  "description": "阿里百秀Node版本",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"nodemon src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Duanzihuang/alishow_node.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Duanzihuang/alishow_node/issues"
+  },
+  "homepage": "https://github.com/Duanzihuang/alishow_node#readme",
+  "dependencies": {
+    "art-template": "^4.13.2",
+    "express": "^4.16.4",
+    "express-art-template": "^1.0.1"
+  }
+}
