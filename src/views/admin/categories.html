@@ -53,19 +53,6 @@
 
 {{block 'script'}}
 <script src="/public/assets/vendors/art-template/template-web.js"></script>
-<script type="text/html" id="list_template">
-  {%each listData%}
-  <tr>
-    <td class="text-center"><input type="checkbox"></td>
-    <td>{% $value.cate_name %}</td>
-    <td>{% $value.cate_slug %}</td>
-    <td class="text-center">
-      <a href="javascript:;" class="btn btn-info btn-xs">编辑</a>
-      <a data-id="{% $value.cate_id %}" name="delete" href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-    </td>
-  </tr>
-  {%/each%}
-</script>
 <script>
   // 我们希望这里的模板字符串在 “浏览器” 中进行解析替换
   // 到浏览器后我们发现这里的 {{}} 没了
@@ -79,65 +66,19 @@
   // 解决办法就是：修改模板渲染语法
   // 标准语法的界定符规则
   // 修改界定符参考文档：https://aui.github.io/art-template/zh-cn/docs/rules.html
-  template.defaults.rules[1].test = /{%([@#]?)[ \t]*(\/?)([\w\W]*?)[ \t]*%}/
-  // var fn = template.compile('hello {%message%}')
-  // var ret = fn({message: 'world'})
-  // console.log(ret)
+  template.defaults.rules[1].test = /{%([@#]?)[ \t]*(\/?)([\w\W]*?)[ \t]*%}/;
+  var fn = template.compile('hello {%msg%}')
+  var result = fn({msg:'art-template'})
+  console.log(result)
 </script>
+
 <script>
-
-  // 异步加载数据列表
-  loadList()
-
-  // 动态渲染的DOM节点，要通过事件委托（事件代理）的方式注册事件
-  $('#list_container').on('click', 'a[name=delete]', handleDelete)
-
-  function handleDelete() {
-    if (!window.confirm('Are you sure?')) {
-      return
+  $.ajax({
+    url:'/api/categories',
+    dataType:'json',
+    success:function(data){
+      console.log(data)
     }
-    var id = $(this).data('id')
-    $.ajax({
-      url: '/api/categories/delete',
-      method: 'GET',
-      data: {
-        id: id
-      },
-      dataType: 'json',
-      success: function (resData) {
-        // 如果删除成功，重新加载列表数据
-        if (resData.success) {
-          loadList()
-        }
-      },
-      error: function (error) {
-        console.log(error)
-      }
-    })
-    return false
-  }
-
-  function loadList() {
-    $.ajax({
-      url: '/api/categories',
-      method: 'GET',
-      data: {},
-      dataType: 'json',
-      success: function (resData) {
-        // 1. 得到请求响应数据
-        if (resData.success) {
-          // 2. 使用模板引擎解析替换模板字符串
-          var htmlStr = template('list_template', {
-            listData: resData.data
-          })
-          // 3. 把解析替换的结果放到列表容器中
-          $('#list_container').html(htmlStr)
-        }
-      },
-      error: function (error) {
-        console.log(error)
-      }
-    })
-  }
+  })
 </script>
 {{/block}}

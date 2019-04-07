@@ -19,8 +19,10 @@ app.set("views",path.join(__dirname,"views"))
 // 集成路由，处理请求
 const router = require(path.join(__dirname,"routers"))
 const adminRouter = require(path.join(__dirname,"routers/admin.js"))
+const apiRouter = require(path.join(__dirname,"routers/api.js"))
 app.use(router)
 app.use('/admin',adminRouter)
+app.use('/api',apiRouter)
 
 // 启动
 app.listen(3000,err=>{

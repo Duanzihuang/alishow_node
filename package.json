@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"nodemon src/app.js"
+    "start": "nodemon src/app.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
   "dependencies": {
     "art-template": "^4.13.2",
     "express": "^4.16.4",
-    "express-art-template": "^1.0.1"
+    "express-art-template": "^1.0.1",
+    "mysql": "^2.16.0"
   }
 }
