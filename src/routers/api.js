@@ -17,5 +17,17 @@ router.get('/categories',async (req,res)=>{
     })
 })
 
+// 删除
+router.get('/categories/delete',async (req,res)=>{
+    // 获取要删除的id
+    const id = req.query.id
+
+    await db.execPromise(`delete from ali_cate where cate_id = ${id}`)
+
+    res.send({
+        success:true
+    })
+})
+
 // 导出
 module.exports = router
