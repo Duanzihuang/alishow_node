@@ -16,6 +16,9 @@ app.engine('html', require('express-art-template'))
 // 设置的render的默认路径
 app.set("views",path.join(__dirname,"views"))
 
+// body-parser中间件
+app.use(express.urlencoded({ extended: true }))
+
 // 集成路由，处理请求
 const router = require(path.join(__dirname,"routers"))
 const adminRouter = require(path.join(__dirname,"routers/admin.js"))

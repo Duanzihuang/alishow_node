@@ -9,9 +9,9 @@ var connection = mysql.createConnection({
 connection.connect()
 
 // 暴露一个执行sql的方法
-exports.execPromise = sql => {
+exports.execPromise = (sql, params) => {
   return new Promise((resolve, reject) => {
-    connection.query(sql, function(error, results) {
+    connection.query(sql, params, function(error, results) {
       if (error) {
         reject(error)
       }

@@ -14,14 +14,14 @@
   </div> -->
   <div class="row">
     <div class="col-md-4">
-      <form>
+      <form id="add_form_id">
         <h2>添加新分类目录</h2>
         <div class="form-group">
           <label for="name">名称</label>
           <input
             id="name"
             class="form-control"
-            name="name"
+            name="cate_name"
             type="text"
             placeholder="分类名称"
           />
@@ -31,7 +31,7 @@
           <input
             id="slug"
             class="form-control"
-            name="slug"
+            name="cate_slug"
             type="text"
             placeholder="slug"
           />
@@ -40,7 +40,9 @@
           </p>
         </div>
         <div class="form-group">
-          <button class="btn btn-primary" type="submit">添加</button>
+          <button class="btn btn-primary" id="add_btn" type="submit">
+            添加
+          </button>
         </div>
       </form>
     </div>
@@ -67,6 +69,14 @@
       </table>
     </div>
   </div>
+  <!-- 修改模态框 -->
+  <div
+    class="modal fade"
+    id="editCateModalId"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+  ></div>
 </div>
 {{/block}}
 
@@ -79,12 +89,43 @@
       <td>{% $value.cate_name %}</td>
       <td>{% $value.cate_slug %}</td>
       <td class="text-center" width="100">
-        <a href="#">编辑</a>&nbsp;
+        <!-- html方式，弹出对话框，不写js代码的方式 -->
+        <!-- <a name="edit" data-toggle="modal" data-target="#exampleModal" data-id="{% $value.cate_id %}" href="#">编辑</a>&nbsp; -->
+        <a name="edit" data-id="{% $value.cate_id %}" href="#">编辑</a>&nbsp;
         <a name="delete" data-id="{% $value.cate_id %}" href="#">删除</a>
       </td>
     </tr>
   {%/each%}
 </script>
+
+<script id="editCateTemplate" type="text/html">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="exampleModalLabel">修改分类</h4>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="recipient-name" class="control-label">名称:</label>
+              <input type="text" id="cateNameId" value="{% cate.cate_name %}" class="form-control" id="recipient-name">
+            </div>
+            <div class="form-group">
+              <label for="message-text" class="control-label">别名:</label>
+              <textarea id="cateSlugId" class="form-control" id="message-text">{% cate.cate_slug %}</textarea>
+            </div>
+            <input type="hidden" id="cateId" value="{% cate.cate_id %}">
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          <button type="button" id="editId" class="btn btn-primary">修改</button>
+        </div>
+      </div>
+    </div>
+</script>
+<script type="text/html"></script>
 <script>
   // 我们希望这里的模板字符串在 “浏览器” 中进行解析替换
   // 到浏览器后我们发现这里的 {{}} 没了
@@ -106,26 +147,48 @@
 
 <script>
   // 通过事件代理/委托，给删除按钮添加点击事件
-  $("#list_container").on('click','a[name=delete]',function(){
+  $('#list_container').on('click', 'a[name=delete]', function() {
     if (!window.confirm('确定删除吗?')) return false
     // 获取要删除的id
     const cate_id = $(this).data('id')
-     
+
     // 发送请求给后台
     $.ajax({
       url: '/api/categories/delete',
-      data:{
-        id:cate_id
+      data: {
+        id: cate_id
       },
-      dataType:'json',
-      success:function(result){
-        if (result.success){
+      dataType: 'json',
+      success: function(result) {
+        if (result.success) {
           loadList()
         }
       }
     })
 
     return false
+  })
+
+  // 编辑
+  $('#list_container').on('click', 'a[name=edit]', function(e) {
+    // 阻止默认行为
+    e.preventDefault()
+
+    // 弹出模态窗
+    $('#editCateModalId').modal()
+
+    // 发送请求获取数据
+    $.ajax({
+      url: '/api/categories/query',
+      data: {
+        id: $(this).data('id')
+      },
+      success: function(result) {
+        const htmlStr = template('editCateTemplate', { cate: result.data })
+
+        $('#editCateModalId').html(htmlStr)
+      }
+    })
   })
 
   loadList()
@@ -142,5 +205,53 @@
       }
     })
   }
+
+  // 添加分类
+  $('#add_btn').click(function(e) {
+    // 阻止默认的表单提交行为
+    e.preventDefault()
+
+    // 获取要提交给后台的数据
+    const data = $('#add_form_id').serialize()
+
+    // 发送ajax请求
+    $.ajax({
+      url: '/api/categories/add',
+      method: 'POST',
+      data,
+      success: function(result) {
+        if (result.success) {
+          // 重新加载数据
+          loadList()
+
+          // 清空内容
+          $('input[name]').val('')
+        }
+      }
+    })
+  })
+
+  // 修改分类
+  $('#editCateModalId').on('click', 'button[id=editId]', function(e) {
+    e.preventDefault()
+
+    $.ajax({
+      url: `/api/categories/update?id=${$('#cateId').val()}`,
+      method: 'PUT',
+      data: {
+        cate_name: $('#cateNameId').val(),
+        cate_slug: $('#cateSlugId').val()
+      },
+      success: function(result) {
+        if (result.success) {
+          // 刷新表格
+          loadList()
+
+          // 关闭对话框
+          $('#editCateModalId').modal('hide')
+        }
+      }
+    })
+  })
 </script>
 {{/block}}
