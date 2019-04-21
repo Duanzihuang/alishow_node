@@ -17,5 +17,8 @@ router.get('/categories',(req,res)=>{
     res.render('admin/categories.html')
 })
 
+// 前缀
+router.prefix = '/admin'
+
 // 导出
 module.exports = router

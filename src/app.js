@@ -1,6 +1,7 @@
 // 导入相关包
 const express = require('express')
 const path = require('path')
+const glob = require('glob')
 
 // 创建app
 const app = express()
@@ -20,12 +21,25 @@ app.set("views",path.join(__dirname,"views"))
 app.use(express.urlencoded({ extended: true }))
 
 // 集成路由，处理请求
+/**
 const router = require(path.join(__dirname,"routers"))
 const adminRouter = require(path.join(__dirname,"routers/admin.js"))
 const apiRouter = require(path.join(__dirname,"routers/api.js"))
 app.use(router)
 app.use('/admin',adminRouter)
 app.use('/api',apiRouter)
+*/
+// 自动挂载路由模块
+const filePaths = glob.sync(path.join(__dirname,"routers/**/*.js"))
+filePaths.forEach(filePath => {
+    // 根据文件路径加载路由模块
+    const router = require(filePath)
+    
+    if (typeof router === 'function'){
+        // 自动挂载路由模块
+        app.use(router.prefix || '/',router)
+    }
+})
 
 // 启动
 app.listen(3000,err=>{

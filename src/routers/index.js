@@ -17,5 +17,8 @@ router.get('/detail',(req,res)=>{
     res.render('detail.html')
 })
 
+// 前缀
+router.prefix = '/'
+
 // 导出
 module.exports = router

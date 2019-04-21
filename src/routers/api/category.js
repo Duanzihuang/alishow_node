@@ -1,7 +1,7 @@
 // 导入express
 const express = require('express')
 const path = require('path')
-const db = require(path.resolve(__dirname,"../utils/db.js"))
+const db = require(path.resolve(__dirname,"../../utils/db.js"))
 
 // 创建路由对象
 const router = express.Router()
