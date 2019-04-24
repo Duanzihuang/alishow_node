@@ -81,7 +81,7 @@
 {{/block}}
 
 {{block 'script'}}
-<script src="/public/assets/vendors/art-template/template-web.js"></script>
+<!-- <script src="/public/assets/vendors/art-template/template-web.js"></script> -->
 <script id="categoriesId" type="text/html">
   {%each categories %}
     <tr>
@@ -124,25 +124,6 @@
         </div>
       </div>
     </div>
-</script>
-<script type="text/html"></script>
-<script>
-  // 我们希望这里的模板字符串在 “浏览器” 中进行解析替换
-  // 到浏览器后我们发现这里的 {{}} 没了
-  // 原因是服务端的模板引擎给解析了
-  // 1. 当前页面是服务端模板引擎渲染出来的
-  // 2. 模板引擎是不关心你的内容的
-  //    他不管你的 html、还是 JavaScript、css 等格式的字符串
-  //    模板引擎只认识 {{}}
-  //    你的 script、html、css 等，在服务端眼里都是：字符串
-  // 这就是所谓的前后端模板语法冲突，前后端模板语法都一样，服务端也分不清哪些字符串是你浏览器模板引擎处理的
-  // 解决办法就是：修改模板渲染语法
-  // 标准语法的界定符规则
-  // 修改界定符参考文档：https://aui.github.io/art-template/zh-cn/docs/rules.html
-  template.defaults.rules[1].test = /{%([@#]?)[ \t]*(\/?)([\w\W]*?)[ \t]*%}/
-  // var fn = template.compile('hello {%msg%}')
-  // var result = fn({msg:'art-template'})
-  // console.log(result)
 </script>
 
 <script>

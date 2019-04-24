@@ -5,16 +5,20 @@ const express = require('express')
 const router = express.Router()
 
 // 处理请求
-router.get('/',(req,res)=>{
-    res.render('admin/index.html')
+router.get('/', (req, res) => {
+  res.render('admin/index.html')
 })
 
-router.get('/login',(req,res)=>{
-    res.render('admin/login.html')
+router.get('/login', (req, res) => {
+  res.render('admin/login.html')
 })
 
-router.get('/categories',(req,res)=>{
-    res.render('admin/categories.html')
+router.get('/categories', (req, res) => {
+  res.render('admin/categories.html')
+})
+
+router.get('/users', (req, res) => {
+  res.render('admin/users.html')
 })
 
 // 前缀
