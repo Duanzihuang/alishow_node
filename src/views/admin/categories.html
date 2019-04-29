@@ -76,7 +76,34 @@
     tabindex="-1"
     role="dialog"
     aria-labelledby="exampleModalLabel"
-  ></div>
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title" id="exampleModalLabel">修改分类</h4>
+        </div>
+        <div class="modal-body">
+          <form id="edit-form"></form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            关闭
+          </button>
+          <button type="button" id="editId" class="btn btn-primary">
+            修改
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {{/block}}
 
@@ -99,31 +126,15 @@
 </script>
 
 <script id="editCateTemplate" type="text/html">
-  <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="exampleModalLabel">修改分类</h4>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="form-group">
-              <label for="recipient-name" class="control-label">名称:</label>
-              <input type="text" id="cateNameId" value="{% cate.cate_name %}" class="form-control" id="recipient-name">
-            </div>
-            <div class="form-group">
-              <label for="message-text" class="control-label">别名:</label>
-              <textarea id="cateSlugId" class="form-control" id="message-text">{% cate.cate_slug %}</textarea>
-            </div>
-            <input type="hidden" id="cateId" value="{% cate.cate_id %}">
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-          <button type="button" id="editId" class="btn btn-primary">修改</button>
-        </div>
-      </div>
-    </div>
+  <div class="form-group">
+    <label for="recipient-name" class="control-label">名称:</label>
+    <input type="text" id="cateNameId" name="cate_name" value="{% cate.cate_name %}" class="form-control" id="recipient-name">
+  </div>
+  <div class="form-group">
+    <label for="message-text" class="control-label">别名:</label>
+    <textarea id="cateSlugId" class="form-control" name="cate_slug">{% cate.cate_slug %}</textarea>
+  </div>
+  <input type="hidden" id="cateId" value="{% cate.cate_id %}">
 </script>
 
 <script>
@@ -167,7 +178,7 @@
       success: function(result) {
         const htmlStr = template('editCateTemplate', { cate: result.data })
 
-        $('#editCateModalId').html(htmlStr)
+        $('#edit-form').html(htmlStr)
       }
     })
   })
@@ -213,6 +224,41 @@
   })
 
   // 修改分类
+  $('#edit-form').validate({
+    rules: {
+      cate_name: {
+        required: true
+      },
+      cate_slug: {
+        required: true
+      }
+    },
+    submitHandler: function() {
+      $.ajax({
+        url: `/api/categories/update?id=${$('#cateId').val()}`,
+        method: 'PUT',
+        data: {
+          cate_name: $('#cateNameId').val(),
+          cate_slug: $('#cateSlugId').val()
+        },
+        success: function(result) {
+          if (result.success) {
+            // 刷新表格
+            loadList()
+
+            // 关闭对话框
+            $('#editCateModalId').modal('hide')
+          }
+        }
+      })
+    }
+  })
+
+  $('#editId').on('click', function() {
+    $('#edit-form').submit()
+  })
+
+  /**
   $('#editCateModalId').on('click', 'button[id=editId]', function(e) {
     e.preventDefault()
 
@@ -234,5 +280,6 @@
       }
     })
   })
+  **/
 </script>
 {{/block}}

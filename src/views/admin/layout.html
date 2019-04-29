@@ -8,7 +8,12 @@
   <link rel="stylesheet" href="/public/assets/vendors/nprogress/nprogress.css">
   <link rel="stylesheet" href="/public/assets/css/admin.css">
   <script src="/public/assets/vendors/nprogress/nprogress.js"></script>
-
+  <style>
+    form label.error {
+      color:red !important;
+      font-weight: bold;
+    }
+  </style>
   {{block 'style'}}{{/block}}
 </head>
 <body>
@@ -25,6 +30,8 @@
   <script src="/public/assets/vendors/jquery/jquery.js"></script>
   <script src="/public/assets/vendors/bootstrap/js/bootstrap.js"></script>
   <script src="/public/assets/vendors/art-template/template-web.js"></script>
+  <script src="/public/assets/vendors/jquery-validation/jquery.validate.min.js"></script>
+  <script src="/public/assets/vendors/jquery-validation/localization/messages_zh.min.js"></script>
   <script>NProgress.done()</script>
   <script>
     // 我们希望这里的模板字符串在 “浏览器” 中进行解析替换
