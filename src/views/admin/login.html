@@ -8,7 +8,7 @@
 </head>
 <body>
   <div class="login">
-    <form class="login-wrap">
+    <form id="loginFormId" class="login-wrap">
       <img class="avatar" src="/public/assets/img/default.png">
       <!-- 有错误信息时展示 -->
       <!-- <div class="alert alert-danger">
@@ -16,14 +16,29 @@
       </div> -->
       <div class="form-group">
         <label for="email" class="sr-only">邮箱</label>
-        <input id="email" type="email" class="form-control" placeholder="邮箱" autofocus>
+        <input id="email" name="admin_email" type="email" class="form-control" placeholder="邮箱" autofocus>
       </div>
       <div class="form-group">
         <label for="password" class="sr-only">密码</label>
-        <input id="password" type="password" class="form-control" placeholder="密码">
+        <input id="password" name="admin_pwd" type="password" class="form-control" placeholder="密码">
       </div>
-      <a class="btn btn-primary btn-block" href="index.html">登 录</a>
+      <a class="btn btn-primary btn-block" href="javascript:login()">登 录</a>
     </form>
   </div>
+  <script src="/public/assets/vendors/jquery/jquery.js"></script>
+  <script src="/public/assets/vendors/nprogress/nprogress.js"></script>
+  <script>
+    function login(){
+      const params = $("#loginFormId").serialize()
+      
+      $.post('/api/users/login',params,result => {
+        if (!result.success){
+          alert(result.message)
+        } else {
+          location.href = '/admin'
+        }
+      })
+    }
+  </script>
 </body>
 </html>

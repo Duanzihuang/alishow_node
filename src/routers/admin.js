@@ -6,6 +6,9 @@ const router = express.Router()
 
 // 处理请求
 router.get('/', (req, res) => {
+  // res.render('admin/index.html',{
+  //   sessionUser:req.session.user
+  // })
   res.render('admin/index.html')
 })
 

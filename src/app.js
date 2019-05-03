@@ -2,6 +2,8 @@
 const express = require('express')
 const path = require('path')
 const glob = require('glob')
+const session = require('express-session')
+const MySQLStore = require('express-mysql-session')(session)
 
 // 创建app
 const app = express()
@@ -19,6 +21,48 @@ app.set('views', path.join(__dirname, 'views'))
 
 // body-parser中间件
 app.use(express.urlencoded({ extended: true }))
+
+// session持久化存储
+const sessionStore = new MySQLStore({
+	host: 'localhost',
+	port: 3306,
+	user: 'root',
+	password: 'root',
+	database: 'ali_show'
+})
+
+// session中间件
+app.use(session({
+  secret: 'keyboard cat',
+  store: sessionStore,
+  resave: false,
+  saveUninitialized: true,
+  cookie:{
+    // expires:'xxxx年xx月xx日 xx时xx分xx秒' //绝对单位，不推荐，因为可能服务器和浏览器时间不一致导致问题
+    maxAge:1000 * 60 * 30 // 单位：毫秒，这里设置了30分钟 相对单位，从现在起延迟多少毫秒过期
+  }
+}))
+
+// 权限中间件
+app.use('/admin',(req,res,next) => {
+  // 跳过登录页面
+  if (req.originalUrl === '/admin/login') {
+    return next()
+  }
+
+  // 没有登录，则去登录页面
+  if (!req.session.user){
+    return res.redirect('/admin/login')
+  }
+
+  // 设置公共页面渲染需要用到的数据
+  app.locals.sessionUser = req.session.user
+
+  // 跳转到下一个中间件执行，此刻，是去路由中间执行代码
+  // 比如访问的路径是 /admin/users 则去能处理/admin/users 的路由中间件去处理
+  // 比如访问的路径是 /admin/categories 则去能处理/admin/categories 的路由中间件去处理
+  next()
+})
 
 // 集成路由，处理请求
 /**

@@ -139,5 +139,25 @@
       }
     })
   }
+
+  // 设置验证规则
+  $("#add_form").validate({
+    rules:{
+      admin_email:{
+        required: true,
+        remote:{
+          url: "/api/users/checkemail",     //后台处理程序
+          type: "GET",               //数据发送方式
+          dataType: "json"
+        }
+      }
+    },
+    messages:{
+      admin_email:{
+        required:"邮箱不能为空",
+        remote:'邮箱已经存在'
+      }
+    }
+  })
 </script>
 {{/block}}
