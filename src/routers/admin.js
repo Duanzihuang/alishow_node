@@ -24,6 +24,14 @@ router.get('/users', (req, res) => {
   res.render('admin/users.html')
 })
 
+router.get('/posts-add', (req, res) => {
+  res.render('admin/posts-add.html')
+})
+
+router.get('/posts', (req, res) => {
+  res.render('admin/posts.html')
+})
+
 // 前缀
 router.prefix = '/admin'
 
