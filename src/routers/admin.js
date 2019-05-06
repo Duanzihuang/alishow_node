@@ -1,5 +1,7 @@
 // 导入express
+const path = require('path')
 const express = require('express')
+const db = require(path.join(__dirname, '../utils/db.js'))
 
 // 创建路由对象
 const router = express.Router()
@@ -24,8 +26,12 @@ router.get('/users', (req, res) => {
   res.render('admin/users.html')
 })
 
-router.get('/posts-add', (req, res) => {
-  res.render('admin/posts-add.html')
+router.get('/posts-add', async (req, res) => {
+  const result = await db.execPromise('select * from ali_cate')
+  
+  res.render('admin/posts-add.html',{
+    categoires:result
+  })
 })
 
 router.get('/posts', (req, res) => {

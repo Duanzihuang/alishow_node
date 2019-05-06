@@ -1,5 +1,9 @@
 {{extend './layout.html'}}
 
+{{block 'style'}}
+<link rel="stylesheet" href="/public/assets/vendors/quill/quill.snow.css">
+{{/block}}
+
 {{block 'content'}}
 <div class="container-fluid">
     <form class="row" id="form">
@@ -10,7 +14,8 @@
           </div>
           <div class="form-group">
             <label for="content">内容</label>
-            <textarea id="content" class="form-control input-lg" name="article_body" cols="30" rows="10" placeholder="内容"></textarea>
+            <!-- <textarea id="content" class="form-control input-lg" name="article_body" cols="30" rows="10" placeholder="内容"></textarea> -->
+            <div id="editor"></div>
             <input type="file" id="upload_file" style="display: none;">
           </div>
         </div>
@@ -29,7 +34,9 @@
           <div class="form-group">
             <label for="category">所属分类</label>
             <select id="category" class="form-control" name="article_cateid">
-              <option value="1">潮科技</option>
+              {{each categoires}}
+                <option value="{{$value.cate_id}}">{{$value.cate_name}}</option>
+              {{/each}}
             </select>
           </div>
           <div class="form-group">
@@ -52,12 +59,86 @@
 {{/block}}
 
 {{block 'script'}}
+  <script src="/public/assets/vendors/quill/quill.js"></script>
   <script>
+    // 初始化富文本编辑器
+    var toolbarOptions = [
+      ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+      ['blockquote', 'code-block'],
+
+      [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+      [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+      [{ 'direction': 'rtl' }],                         // text direction
+
+      [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+      [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+      [{ 'font': [] }],
+      [{ 'align': [] }],
+
+      ['clean'],                                         // remove formatting button
+      ['image']
+    ]
+    
+    var quill = new Quill('#editor', {
+      modules: {
+        toolbar: toolbarOptions
+      },
+      theme: 'snow'
+    })
+
+    // 给toolbar上面的image添加点击事件
+    // Handlers can also be added post initialization
+    var toolbar = quill.getModule('toolbar');
+    toolbar.addHandler('image', function(){
+       $("#upload_file").click()
+    })
+
+    // 自定义quill中toolbar的思路
+    // 1. 在页面中放置一个 file 类型的 input
+    // 2. 监听工具栏中 image 的点击行为
+    // 3. 在 image 的点击行为中手动触发 file 的点击事件
+    //    file 的默认点击行为会弹框让用户选择要上传的文件
+    // 4. 监听 file 的 change 事件
+    //    当 change 事件发生改变，读取 file 的文件对象，构建 FormData 发送给服务器
+    // 5. 服务器接受到请求，把文件存储到服务器中，然后响应该资源的 Web 请求路径
+
+    // 监听upload_file的改变事件
+    $("#upload_file").on('change',function(){
+      const file = $("#upload_file")[0].files[0]
+
+      // 创建FormData，并且上传到服务器
+      const formData = new FormData()
+      formData.append('file',file)
+
+      $.ajax({
+        url: "/api/upload",
+        type: "POST",
+        data: formData,
+        processData: false,  // 不处理数据
+        contentType: false,   // 不设置内容类型
+        success:function(result){
+          if (result.success){
+            // 获取到当前quill所处的光标位置，插入一张img
+            const selection = quill.getSelection()
+
+            // 插入一张图片到富文本框中
+            quill.insertEmbed(selection.index,'image',result.filePath)
+          }
+        }
+      })
+    })   
+
     $("#submit_btn").on('click',function(e){
       // 阻止默认行为
       e.preventDefault()
 
       var fd = new FormData(document.querySelector("form"))
+      // 拿到富文本的内容，放入formData中
+      fd.append('article_body',quill.root.innerHTML)
 
       $.ajax({
         url: "/api/posts/create",
