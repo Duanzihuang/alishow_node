@@ -24,34 +24,36 @@ app.use(express.urlencoded({ extended: true }))
 
 // session持久化存储
 const sessionStore = new MySQLStore({
-	host: 'localhost',
-	port: 3306,
-	user: 'root',
-	password: 'root',
-	database: 'ali_show'
+  host: 'localhost',
+  port: 3306,
+  user: 'root',
+  password: 'root',
+  database: 'ali_show'
 })
 
 // session中间件
-app.use(session({
-  secret: 'keyboard cat',
-  store: sessionStore,
-  resave: false,
-  saveUninitialized: true,
-  cookie:{
-    // expires:'xxxx年xx月xx日 xx时xx分xx秒' //绝对单位，不推荐，因为可能服务器和浏览器时间不一致导致问题
-    maxAge:1000 * 60 * 30 // 单位：毫秒，这里设置了30分钟 相对单位，从现在起延迟多少毫秒过期
-  }
-}))
+app.use(
+  session({
+    secret: 'keyboard cat',
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      // expires:'xxxx年xx月xx日 xx时xx分xx秒' //绝对单位，不推荐，因为可能服务器和浏览器时间不一致导致问题
+      maxAge: 1000 * 60 * 30 // 单位：毫秒，这里设置了30分钟 相对单位，从现在起延迟多少毫秒过期
+    }
+  })
+)
 
 // 权限中间件
-app.use('/admin',(req,res,next) => {
+app.use('/admin', (req, res, next) => {
   // 跳过登录页面
   if (req.originalUrl === '/admin/login') {
     return next()
   }
 
   // 没有登录，则去登录页面
-  if (!req.session.user){
+  if (!req.session.user) {
     return res.redirect('/admin/login')
   }
 

@@ -6,6 +6,7 @@
   <title>阿里百秀-发现生活，发现美!</title>
   <link rel="stylesheet" href="/public/assets/css/style.css">
   <link rel="stylesheet" href="/public/assets/vendors/font-awesome/css/font-awesome.css">
+  <link rel="stylesheet" href="/public/assets/vendors/bootstrap/css/bootstrap.css">
 </head>
 <body>
   <div class="wrapper">
@@ -312,78 +313,8 @@
       </div>
       <div class="panel new">
         <h3>最新发布</h3>
-        <div class="entry">
-          <div class="head">
-            <span class="sort">会生活</span>
-            <a href="javascript:;">星球大战：原力觉醒视频演示 电影票68</a>
-          </div>
-          <div class="main">
-            <p class="info">admin 发表于 2015-06-29</p>
-            <p class="brief">星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯</p>
-            <p class="extra">
-              <span class="reading">阅读(3406)</span>
-              <span class="comment">评论(0)</span>
-              <a href="javascript:;" class="like">
-                <i class="fa fa-thumbs-up"></i>
-                <span>赞(167)</span>
-              </a>
-              <a href="javascript:;" class="tags">
-                分类：<span>星球大战</span>
-              </a>
-            </p>
-            <a href="javascript:;" class="thumb">
-              <img src="/public/uploads/hots_2.jpg" alt="">
-            </a>
-          </div>
-        </div>
-        <div class="entry">
-          <div class="head">
-            <span class="sort">会生活</span>
-            <a href="javascript:;">星球大战：原力觉醒视频演示 电影票68</a>
-          </div>
-          <div class="main">
-            <p class="info">admin 发表于 2015-06-29</p>
-            <p class="brief">星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯</p>
-            <p class="extra">
-              <span class="reading">阅读(3406)</span>
-              <span class="comment">评论(0)</span>
-              <a href="javascript:;" class="like">
-                <i class="fa fa-thumbs-up"></i>
-                <span>赞(167)</span>
-              </a>
-              <a href="javascript:;" class="tags">
-                分类：<span>星球大战</span>
-              </a>
-            </p>
-            <a href="javascript:;" class="thumb">
-              <img src="/public/uploads/hots_2.jpg" alt="">
-            </a>
-          </div>
-        </div>
-        <div class="entry">
-          <div class="head">
-            <span class="sort">会生活</span>
-            <a href="javascript:;">星球大战：原力觉醒视频演示 电影票68</a>
-          </div>
-          <div class="main">
-            <p class="info">admin 发表于 2015-06-29</p>
-            <p class="brief">星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯</p>
-            <p class="extra">
-              <span class="reading">阅读(3406)</span>
-              <span class="comment">评论(0)</span>
-              <a href="javascript:;" class="like">
-                <i class="fa fa-thumbs-up"></i>
-                <span>赞(167)</span>
-              </a>
-              <a href="javascript:;" class="tags">
-                分类：<span>星球大战</span>
-              </a>
-            </p>
-            <a href="javascript:;" class="thumb">
-              <img src="/public/uploads/hots_2.jpg" alt="">
-            </a>
-          </div>
-        </div>
+        <div id="posts-list-container"></div>
+        <ul id="pagination-demo" class="pagination-sm"></ul>
       </div>
     </div>
     <div class="footer">
@@ -392,7 +323,40 @@
   </div>
   <script src="/public/assets/vendors/jquery/jquery.js"></script>
   <script src="/public/assets/vendors/swipe/swipe.js"></script>
+  <script src="/public/assets/vendors/nprogress/nprogress.js"></script>
+  <script src="/public/assets/vendors/art-template/template-web.js"></script>
+  <script src="/public/assets/vendors/twbs-pagination/jquery.twbsPagination.js"></script>
+  <script type="text/html" id="posts-template">
+    {%each list%}
+      <div class="entry">
+        <div class="head">
+          <span class="sort">会生活</span>
+          <a href="javascript:;">{%$value.article_title%}</a>
+        </div>
+        <div class="main">
+          <p class="info">admin 发表于 2015-06-29</p>
+          <p class="brief">{%$value.article_desc%}</p>
+          <p class="extra">
+            <span class="reading">阅读(3406)</span>
+            <span class="comment">评论(0)</span>
+            <a href="javascript:;" class="like">
+              <i class="fa fa-thumbs-up"></i>
+              <span>赞(167)</span>
+            </a>
+            <a href="javascript:;" class="tags">
+              分类：<span>星球大战</span>
+            </a>
+          </p>
+          <a href="javascript:;" class="thumb">
+            <img src="/public/uploads/hots_2.jpg" alt="">
+          </a>
+        </div>
+      </div>
+    {%/each%}
+  </script>
   <script>
+    // 修改界定符参考文档：https://aui.github.io/art-template/zh-cn/docs/rules.html
+    template.defaults.rules[1].test = /{%([@#]?)[ \t]*(\/?)([\w\W]*?)[ \t]*%}/
     //
     var swiper = Swipe(document.querySelector('.swipe'), {
       auto: 3000,
@@ -413,6 +377,58 @@
         swiper.next();
       }
     })
+
+    var $pagination = $('#pagination-demo')
+    var defaultOpts = {
+        first: '第一页',
+        prev: '上一页',
+        next: '下一页',
+        last: '最后一页'
+    };
+    $pagination.twbsPagination(defaultOpts)
+
+    // 发送请求，获取数据
+    loadData(1)
+
+    function loadData(_page){
+      $.ajax({
+        url:'/api/posts',
+        method:'GET',
+        data:{
+          _page
+        },
+        success:function(result){
+          const listHTML = template('posts-template',{
+            list:result.data.list
+          })
+
+          // 把模版生成的html，插入到容器中
+          $("#posts-list-container").html(listHTML)
+
+          // 分页条处理
+          var totalPages = Math.ceil(result.data.count / 5)
+          var currentPage = $pagination.twbsPagination('getCurrentPage')
+          // 销毁之前的分页条
+          $pagination.twbsPagination('destroy') 
+          // 重新初始化分页条
+          $pagination.twbsPagination($.extend({}, defaultOpts, {
+              startPage: currentPage,
+              totalPages: totalPages,
+              /**
+               * 不能这么用，会造成死循环
+               * onPageClick 每次加载完毕之后都会执行
+              onPageClick: function (evt, page) {
+                // some code
+                loadData(page)
+              }
+              **/
+          })).on('page',function (evt, page) {
+              loadData(page)
+          })
+        }
+      })
+    }
   </script>
+  
 </body>
 </html>

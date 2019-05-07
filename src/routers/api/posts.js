@@ -11,6 +11,32 @@ const router = express.Router()
 // 配置前缀
 router.prefix = '/api/posts'
 
+// 分页查询文章列表
+router.get('/',async (req,res,next) => {
+  const result = {
+    status:0,
+    message:'查询成功',
+    data:{}
+  }
+
+  const {_page = 1,_size = 5} = req.query
+
+  // 开始索引
+  const start = (_page - 1) * _size
+
+  const res1 = await db.execPromise('select count(*) as count from ali_article')
+  if (res1 && res1.length > 0){
+    result.data.count = res1[0].count
+  }
+
+  const res2 = await db.execPromise('select * from ali_article limit ?,?',[parseInt(start),parseInt(_size)])
+  if (res2 && res2.length > 0){
+    result.data.list = res2
+  }
+
+  res.send(result)
+})
+
 // 处理添加文章的请求
 router.post('/create', upload.single('article_file'), async (req, res) => {
   // 获取 文件数据 和 普通的文本数据
